@@ -48,9 +48,12 @@ Or, run without an argument and enter the domain when prompted:
 (Domain): example.com
 ```
 The script will then:
+
 1. Find subdomains.
-2.Fetch Wayback URLs for each subdomain.
-3.Ask if you want to perform a sensitive keyword scan.
+
+2. Fetch Wayback URLs for each subdomain.
+
+3. Ask if you want to perform a sensitive keyword scan.
 
 ## 📂 Output Structure
 All results are saved within a results/ directory, organized by the target domain:
