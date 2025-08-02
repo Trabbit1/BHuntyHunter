@@ -1,3 +1,4 @@
+
 <p align="center">
   <img src="https://i.ibb.co/rGHnVhCQ/bhunty-logo-removebg-preview.png" alt="BHunty Logo" width="500"/>
 </p>
@@ -22,35 +23,47 @@ BHunty relies on a few external tools. Make sure you have them installed and acc
 git clone https://github.com/Trabbit0ne/BHunty.git
 cd BHunty
 ```
-## Install Dependencies
+
+### Install Dependencies
+
 subfinder: A fast subdomain enumeration tool
+
 ```bash
 go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
 ```
+
 wcwidth (Python module): Used for accurate display width calculation in the terminal
+
 ```bash
 pip3 install wcwidth
 ```
+
 ## ⚡ Usage
+
 Run BHunty from your terminal. You can provide the target domain as an argument or enter it when prompted.
+
 ```bash
-./bhunty.sh [domain.com]
+bhunty.sh [domain.com]
 ```
+
 Or
+
 ```bash
-./bhunty.sh
+bhunty.sh
 ```
+
 ## Example
+
 ```bash
-./bhunty.sh example.com
+bhunty.sh example.com
 ```
+
 Or, run without an argument and enter the domain when prompted:
-```bash
-./bhunty.sh
-```
+
 ```makefile
 (Domain): example.com
 ```
+
 The script will then:
 
 1. Find subdomains.
@@ -60,23 +73,33 @@ The script will then:
 3. Ask if you want to perform a sensitive keyword scan.
 
 ## 📂 Output Structure
+
 All results are saved within a results/ directory, organized by the target domain:
-```graphql
+
+```plaintext
 results/
 └── example.com/
     ├── subdomains.txt      # List of discovered subdomains
     ├── waybackurls.txt     # Unique URLs from Wayback Machine
     └── sensitive.txt       # (If scanned) URLs containing sensitive keywords
 ```
+
 ## 🔍 Sensitive Keyword Scanning
+
 When prompted, you can choose to scan the `waybackurls.txt` file for a predefined list of sensitive keywords. This helps in quickly identifying potentially vulnerable or misconfigured endpoints that might expose sensitive information.
 
 The keywords include, but are not limited to:
+
 `admin`, `login`, `password`, `secret`, `api`, `token`, `config`, `debug`, `backup`, `dump`, `sql`, `shell`, `root`, `ssh`, `env`, `vault`, `staging`, `dev`, `wp-admin`, `wp-json`, `cdn`, `assets.`, `_next.`
+
 ## 🤝 Contributing
+
 Contributions are welcome! If you have suggestions for improvements, new features, or bug fixes, feel free to open an issue or submit a pull request.
+
 ## 👤 Author
+
 ### Émile "trabbit" Durand
+
 * GitHub: [github.com/Trabbit0ne](https://github.com/Trabbit0ne)
 * Portfolio: [trabbit.glitch.me](https://trabbit.glitch.me)
 * Medium Blog: [emiledurand.medium.com](https://emiledurand.medium.com)
