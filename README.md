@@ -1,106 +1,71 @@
-
 <p align="center">
   <img src="https://i.ibb.co/rGHnVhCQ/bhunty-logo-removebg-preview.png" alt="BHunty Logo" width="500"/>
 </p>
 
-A modular and efficient Bash-based framework for web application reconnaissance, designed to streamline subdomain discovery, URL harvesting, and sensitive keyword scanning.
+BHunty is a powerful Bash + Go-based bug bounty reconnaissance toolkit. It automates subdomain enumeration, archives discovery, and scans for sensitive keywords.
 
 ## 🚀 Features
 
-- **Subdomain Enumeration**: Leverages `subfinder` to quickly identify active subdomains for a given target.
-- **Wayback Machine URL Harvesting**: Gathers historical URLs from the Wayback Machine for all discovered subdomains using `waybackurls`.
-- **Sensitive Keyword Scanning**: Automatically scans collected URLs for common sensitive indicators like `admin`, `password`, `api`, `token`, and more.
-- **Structured Output**: Organizes all reconnaissance data into a dedicated `results/$domain/` directory for easy review and further analysis.
-- **User-Friendly Interface**: Interactive prompts and clear output messages guide the user through the process.
+- Subdomain enumeration using Subfinder
+- Archive URL discovery with Wayback Machine
+- Keyword scanning for juicy info like passwords, tokens, etc.
+- Easy-to-read output formatting
+- Clean file structure with result persistence
 
-## 🛠️ Installation
+## 📦 Installation
 
-BHunty relies on a few external tools. Make sure you have them installed and accessible in your `PATH`.
+Make sure you have [Go](https://go.dev/dl/) installed (version 1.18+ recommended).
 
-### Clone the Repository
-
-```bash
-git clone https://github.com/Trabbit0ne/BHunty.git
-cd BHunty
-```
-
-### Install Dependencies
-
-subfinder: A fast subdomain enumeration tool
+Install BHunty CLI tool directly using:
 
 ```bash
-go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
+go install github.com/Trabbit1/BHunty/cmd/bhunty@latest
 ```
 
-wcwidth (Python module): Used for accurate display width calculation in the terminal
+This will install the `bhunty` binary in your `$GOPATH/bin` (or `$HOME/go/bin` by default).
+
+Make sure that your Go bin path is in your `PATH` environment variable to run `bhunty` from anywhere:
 
 ```bash
-pip3 install wcwidth
+export PATH=$PATH:$(go env GOPATH)/bin
 ```
 
-## ⚡ Usage
-
-Run BHunty from your terminal. You can provide the target domain as an argument or enter it when prompted.
+## 🧪 Usage
 
 ```bash
-bhunty.sh [domain.com]
+bhunty example.com
 ```
 
-Or
+Results are saved in:
 
-```bash
-bhunty.sh
 ```
-
-## Example
-
-```bash
-bhunty.sh example.com
-```
-
-Or, run without an argument and enter the domain when prompted:
-
-```makefile
-(Domain): example.com
-```
-
-The script will then:
-
-1. Find subdomains.
-
-2. Fetch Wayback URLs for each subdomain.
-
-3. Ask if you want to perform a sensitive keyword scan.
-
-## 📂 Output Structure
-
-All results are saved within a results/ directory, organized by the target domain:
-
-```plaintext
 results/
-└── example.com/
-    ├── subdomains.txt      # List of discovered subdomains
-    ├── waybackurls.txt     # Unique URLs from Wayback Machine
-    └── sensitive.txt       # (If scanned) URLs containing sensitive keywords
+  └── example.com/
+      ├── subdomains.txt
+      └── waybackurls.txt
 ```
 
-## 🔍 Sensitive Keyword Scanning
+## 🎯 Optional Scanning
 
-When prompted, you can choose to scan the `waybackurls.txt` file for a predefined list of sensitive keywords. This helps in quickly identifying potentially vulnerable or misconfigured endpoints that might expose sensitive information.
+BHunty can optionally scan archive URLs for sensitive keywords like:
 
-The keywords include, but are not limited to:
+- password
+- token
+- wp-admin
+- api_key
+- upload
 
-`admin`, `login`, `password`, `secret`, `api`, `token`, `config`, `debug`, `backup`, `dump`, `sql`, `shell`, `root`, `ssh`, `env`, `vault`, `staging`, `dev`, `wp-admin`, `wp-json`, `cdn`, `assets.`, `_next.`
+## 📁 Project Structure
 
-## 🤝 Contributing
+```
+BHunty/
+├── cmd/
+│   └── bhunty/
+│       └── main.go
+├── go.mod
+└── README.md
+```
 
-Contributions are welcome! If you have suggestions for improvements, new features, or bug fixes, feel free to open an issue or submit a pull request.
+## 📜 License
 
-## 👤 Author
-
-### Émile "trabbit" Durand
-
-* GitHub: [github.com/Trabbit0ne](https://github.com/Trabbit0ne)
-* Portfolio: [trabbit.glitch.me](https://trabbit.glitch.me)
-* Medium Blog: [emiledurand.medium.com](https://emiledurand.medium.com)
-* YouTube: [@TrabbitOne](https://youtube.com/@TrabbitOne)
+MIT License
