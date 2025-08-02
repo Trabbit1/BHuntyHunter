@@ -36,6 +36,10 @@ Run BHunty from your terminal. You can provide the target domain as an argument 
 ```bash
 ./bhunty.sh [domain.com]
 ```
+Or
+```bash
+./bhunty.sh
+```
 ## Example
 ```bash
 ./bhunty.sh example.com
