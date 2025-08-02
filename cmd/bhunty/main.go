@@ -10,6 +10,8 @@ import (
 	"regexp"
 	"sort"
 	"strings"
+
+	"github.com/mattn/go-runewidth"
 )
 
 func usage() {
@@ -95,6 +97,29 @@ func dedupLines(lines []string) []string {
 	return unique
 }
 
+func printBoxedMessage(message string) {
+	padding := 2
+	contentWidth := runewidth.StringWidth(message) + padding*2
+
+	fmt.Print("+")
+	for i := 0; i < contentWidth; i++ {
+		fmt.Print("-")
+	}
+	fmt.Println("+")
+
+	fmt.Print("|")
+	fmt.Print(strings.Repeat(" ", padding))
+	fmt.Print(message)
+	fmt.Print(strings.Repeat(" ", padding))
+	fmt.Println("|")
+
+	fmt.Print("+")
+	for i := 0; i < contentWidth; i++ {
+		fmt.Print("-")
+	}
+	fmt.Println("+")
+}
+
 func main() {
 	if len(os.Args) > 1 && (os.Args[1] == "-h" || os.Args[1] == "--help") {
 		usage()
@@ -136,9 +161,7 @@ func main() {
 		return
 	}
 
-	fmt.Printf("+------------------------------+\n")
-	fmt.Printf("| ✅  Found %d subdomains |\n", len(subs))
-	fmt.Printf("+------------------------------+\n")
+	printBoxedMessage(fmt.Sprintf("✅  Found %d subdomains for %s", len(subs), domain))
 
 	fmt.Println("[*] Fetching waybackurls for all subdomains...")
 	var allUrls []string
