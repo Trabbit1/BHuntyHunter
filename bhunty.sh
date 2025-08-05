@@ -21,7 +21,7 @@ usage() {
   EXAMPLES:
     ./bhunty.sh example.com
     ./bhunty.sh https://sub.domain.com/page
-    ./bhunty.sh               # Prompts you to enter domain interactively
+    ./bhunty.sh
 
   OPTIONS:
     -h, --help      Show this help message and exit
@@ -156,7 +156,7 @@ if [[ "$do_scan" =~ ^[Yy]$ ]]; then
     echo "[*] Scanning for sensitive keywords..."
 
     keywords=(
-        admin login passwd password secret api key config debug token
+        admin _next jwt login passwd password secret api key config debug token
         backup dump db sql shell root ssh env vault staging dev
         wp-admin wp-json cdn assets. _next
     )
