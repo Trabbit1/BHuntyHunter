@@ -36,7 +36,7 @@ It automates **subdomain enumeration**, **Wayback Machine URL collection**, and 
 1. Clone this repository:
    ```bash
    git clone https://github.com/Trabbit1/BHunty
-   cd BHunty/python
+   cd BHunty
    ```
 
 2. (Optional) Install the `wcwidth` module:
@@ -87,19 +87,12 @@ BHunty can optionally grep for common sensitive patterns like:
 
 ```
 BHunty/
-└── python/
-    ├── bhunty.py
-    └── README.md
+  ├── bhunty.py
+  └── README.md
 ```
 
 ---
 
 ## 🧑‍💻 Author
 
-Made with ❤️ by [Trabbit0ne](https://trabbit.glitch.me)
-
----
-
-## 📜 License
-
-MIT License
+Made by [Trabbit0ne](https://trabbit.glitch.me)
