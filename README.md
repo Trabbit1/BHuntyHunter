@@ -8,15 +8,23 @@
 It automates **subdomain enumeration**, **Wayback Machine URL collection**, and optional **sensitive keyword scanning** for juicy recon findings.
 
 ---
-
-## 🚀 Features
-
-- 🔍 Subdomain enumeration using **Subfinder** and **Assetfinder**
-- 📜 Archive URL collection via the **Wayback Machine**
-- 🧠 Optional keyword scanning for common sensitive patterns (e.g., `password`, `token`, `jwt`, `wp-admin`, etc.)
-- 📁 Clean output structure with result persistence
-- ✅ Cross-platform compatible & easy to extend
-
+## Useful Usage Examples
+### Auto XSS
+```bash
+domain="domain.com"; yes y | bhunty "$domain" --param; clear; cat "results/$domain/params.txt" | dalfox pipe
+```
+### Sensitive Access
+```bash
+domain="domain.com"; yes y | bhunty "$domain" --sensitive; clear; cat "results/$domain/sensitive.txt" | httpx -silent -sc
+```
+### Auto 403
+```bash
+domain="domain.com"; yes y | bhunty "$domain"; clear; cat "results/$domain/waybackurls.txt" | httpx -silent -mc 403
+```
+### Auto Url JWTs Extractor
+```bash
+domain="domain.com"; yes y | bhunty "$domain"; clear; cat "results/$domain/waybackurls.txt" | grep -Eo 'eyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+'
+```
 ---
 
 ## ⚙️ Requirements
@@ -51,7 +59,7 @@ It automates **subdomain enumeration**, **Wayback Machine URL collection**, and 
 ## 🧪 Usage
 
 ```bash
-python3 bhunty.py example.com
+python3 bhunty.py <domain or URL> [option(s)]
 ```
 
 You can also pass a full URL (e.g., `https://sub.example.com/page`) — BHunty will extract the domain automatically.
