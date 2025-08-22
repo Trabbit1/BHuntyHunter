@@ -1,0 +1,2 @@
+# BHunty Python dependencies
+wcwidth>=0.2.6
