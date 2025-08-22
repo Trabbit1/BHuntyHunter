@@ -75,19 +75,9 @@ results/
 └── example.com/
     ├── subdomains.txt       # Enumerated subdomains
     ├── waybackurls.txt      # URLs pulled from the Wayback Machine
+    ├── params.txt           # (Optional) Parameters in URLs
     └── sensitive.txt        # (Optional) Matched keywords in URLs
 ```
-
----
-
-## 🔑 Keywords Scanned (Optional)
-
-BHunty can optionally grep for common sensitive patterns like:
-
-- `admin`, `login`, `password`, `secret`
-- `token`, `api`, `jwt`, `config`, `env`
-- `wp-admin`, `db`, `root`, `debug`
-- and more…
 
 ---
 
