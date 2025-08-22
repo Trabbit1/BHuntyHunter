@@ -15,7 +15,7 @@ def usage():
 /_____/_/ /_/\__,_/_/ /_/\__/\__, /
                             /____/
 
-  BHunty 1.2 by Trabbit0ne
+  BHunty 1.2 by Trabbit0ne (Python Edition)
   ----------------------------------------
   Automated recon script: subdomains + Wayback URLs + optional sensitive keyword scan and parameter extraction.
 
