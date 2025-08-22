@@ -49,7 +49,7 @@ domain="domain.com"; yes y | bhunty "$domain"; clear; cat "results/$domain/wayba
 
 2. (Optional) Install the `wcwidth` module:
    ```bash
-   pip install wcwidth
+   pip3 install -r requirements.txt
    ```
 
 3. Make sure the required binaries (`subfinder`, `assetfinder`, `waybackurls`) are in your `$PATH`.
