@@ -7,26 +7,6 @@
 **BHunty 1.2** is a Python-based bug bounty reconnaissance toolkit by [Trabbit0ne](https://trabbit.glitch.me).  
 It automates **subdomain enumeration**, **Wayback Machine URL collection**, and optional **sensitive keyword scanning** for juicy recon findings.
 
----
-## Useful Usage Examples
-### Auto XSS
-```bash
-domain="domain.com"; yes y | bhunty "$domain" --param; clear; cat "results/$domain/params.txt" | dalfox pipe
-```
-### Sensitive Access
-```bash
-domain="domain.com"; yes y | bhunty "$domain" --sensitive; clear; cat "results/$domain/sensitive.txt" | httpx -silent -sc
-```
-### Auto 403 Discovery
-```bash
-domain="domain.com"; yes y | bhunty "$domain"; clear; cat "results/$domain/waybackurls.txt" | httpx -silent -mc 403
-```
-### JWT Extractor
-```bash
-domain="domain.com"; yes y | bhunty "$domain"; clear; cat "results/$domain/waybackurls.txt" | grep -Eo 'eyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+'
-```
----
-
 ## ⚙️ Requirements
 
 - Python 3.6+
@@ -67,6 +47,25 @@ You can also pass a full URL (e.g., `https://sub.example.com/page`) — BHunty w
 You’ll be prompted whether you want to scan the archive URLs for sensitive keywords.
 
 ---
+## 💡 Useful Usage Examples
+### Auto XSS
+```bash
+domain="domain.com"; yes y | bhunty "$domain" --param; clear; cat "results/$domain/params.txt" | dalfox pipe
+```
+### Sensitive Access
+```bash
+domain="domain.com"; yes y | bhunty "$domain" --sensitive; clear; cat "results/$domain/sensitive.txt" | httpx -silent -sc
+```
+### Auto 403 Discovery
+```bash
+domain="domain.com"; yes y | bhunty "$domain"; clear; cat "results/$domain/waybackurls.txt" | httpx -silent -mc 403
+```
+### JWT Extractor
+```bash
+domain="domain.com"; yes y | bhunty "$domain"; clear; cat "results/$domain/waybackurls.txt" | grep -Eo 'eyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+'
+```
+---
+
 
 ## 📁 Output Structure
 
