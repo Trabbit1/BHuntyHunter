@@ -17,11 +17,11 @@ domain="domain.com"; yes y | bhunty "$domain" --param; clear; cat "results/$doma
 ```bash
 domain="domain.com"; yes y | bhunty "$domain" --sensitive; clear; cat "results/$domain/sensitive.txt" | httpx -silent -sc
 ```
-### Auto 403
+### Auto 403 Discovery
 ```bash
 domain="domain.com"; yes y | bhunty "$domain"; clear; cat "results/$domain/waybackurls.txt" | httpx -silent -mc 403
 ```
-### Auto Url JWTs Extractor
+### JWT Extractor
 ```bash
 domain="domain.com"; yes y | bhunty "$domain"; clear; cat "results/$domain/waybackurls.txt" | grep -Eo 'eyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+'
 ```
