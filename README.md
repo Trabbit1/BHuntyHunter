@@ -48,19 +48,19 @@ You’ll be prompted whether you want to scan the archive URLs for sensitive key
 
 ---
 ## 💡 Useful Usage Examples
-### Auto XSS
+#### Auto XSS
 ```bash
 domain="domain.com"; yes y | bhunty "$domain" --param; clear; cat "results/$domain/params.txt" | dalfox pipe
 ```
-### Sensitive Access
+#### Sensitive Access
 ```bash
 domain="domain.com"; yes y | bhunty "$domain" --sensitive; clear; cat "results/$domain/sensitive.txt" | httpx -silent -sc
 ```
-### Auto 403 Discovery
+#### Auto 403 Discovery
 ```bash
 domain="domain.com"; yes y | bhunty "$domain"; clear; cat "results/$domain/waybackurls.txt" | httpx -silent -mc 403
 ```
-### JWT Extractor
+#### JWT Extractor
 ```bash
 domain="domain.com"; yes y | bhunty "$domain"; clear; cat "results/$domain/waybackurls.txt" | grep -Eo 'eyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+'
 ```
