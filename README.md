@@ -1,10 +1,10 @@
 <p align="center">
-  <img src="https://i.ibb.co/fYzjxr4N/output-onlinepngtools-2.png" alt="BHunty Logo" width="500"/>
+  <img src="https://i.ibb.co/fYzjxr4N/output-onlinepngtools-2.png" alt="BHunty Logo" width="650"/>
 </p>
 
-# BHunty [NEW UPDATE: 1.2]
+---
 
-**BHunty 1.2** is a Python-based bug bounty reconnaissance toolkit by [Trabbit0ne](https://trabbit.glitch.me).  
+BHunty is a Python-based bug bounty reconnaissance toolkit by [Trabbit0ne](https://trabbit.neocities.org).  
 It automates **subdomain enumeration**, **Wayback Machine URL collection**, and optional **sensitive keyword scanning** for juicy recon findings.
 
 ## ⚙️ Requirements
