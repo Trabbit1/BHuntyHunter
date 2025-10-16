@@ -7,7 +7,7 @@
 BHunty is a Python-based bug bounty reconnaissance toolkit by [Trabbit0ne](https://trabbit.neocities.org).  
 It automates **subdomain enumeration**, **Wayback Machine URL collection**, and optional **sensitive keyword scanning** for juicy recon findings.
 
-## ⚙️ Requirements
+## Requirements
 
 - Python 3.6+
 - External tools required:
@@ -19,7 +19,7 @@ It automates **subdomain enumeration**, **Wayback Machine URL collection**, and 
 
 ---
 
-## 📦 Installation
+## Installation
 
 1. Clone this repository:
    ```bash
@@ -36,7 +36,7 @@ It automates **subdomain enumeration**, **Wayback Machine URL collection**, and 
 
 ---
 
-## 🧪 Usage
+## Usage
 
 ```bash
 python3 bhunty.py <domain or URL> [option(s)]
@@ -47,7 +47,7 @@ You can also pass a full URL (e.g., `https://sub.example.com/page`) — BHunty w
 You’ll be prompted whether you want to scan the archive URLs for sensitive keywords.
 
 ---
-## 💡 Useful Usage Examples
+## Useful Usage Examples
 #### Auto XSS
 ```bash
 domain="domain.com"; yes y | bhunty "$domain" --param; clear; cat "results/$domain/params.txt" | dalfox pipe
@@ -67,7 +67,7 @@ domain="domain.com"; yes y | bhunty "$domain"; clear; cat "results/$domain/wayba
 ---
 
 
-## 📁 Output Structure
+## Output Structure
 
 ```
 results/
@@ -80,7 +80,7 @@ results/
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 
 ```
 BHunty/
@@ -90,6 +90,6 @@ BHunty/
 
 ---
 
-## 🧑‍💻 Author
+## Author
 
 Made by [Trabbit0ne](https://trabbit.glitch.me)
