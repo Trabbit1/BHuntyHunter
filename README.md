@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://i.ibb.co/rGHnVhCQ/bhunty-logo-removebg-preview.png" alt="BHunty Logo" width="500"/>
+  <img src="https://i.ibb.co/fYzjxr4N/output-onlinepngtools-2.png" alt="BHunty Logo" width="500"/>
 </p>
 
 # BHunty [NEW UPDATE: 1.2]
