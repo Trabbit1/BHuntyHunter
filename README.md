@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://i.ibb.co/fYzjxr4N/output-onlinepngtools-2.png" alt="BHunty Logo" width="650"/>
+  <img src="images/logo.png" alt="BHunty Logo" width="650"/>
 </p>
 
 ---
