@@ -5,6 +5,7 @@ import sys
 import subprocess
 import urllib.parse
 from pathlib import Path
+from concurrent.futures import ThreadPoolExecutor
 
 def usage():
     print(r"""
@@ -15,16 +16,17 @@ def usage():
 /_____/_/ /_/\__,_/_/ /_/\__/\__, /
                             /____/
 
-  BHunty 1.2 by Trabbit0ne (Python Edition)
+  BHunty 1.3 by Trabbit0ne (Python Edition)
   ----------------------------------------
   Automated recon script: subdomains + Wayback URLs + optional sensitive keyword scan and parameter extraction.
 
   USAGE:
-    python3 bhunty.py <domain or URL> [option(s)]
+    python3 bhunty.py <domain or URL> [options]
 
   OPTIONS:
-    --sensitive    Scan Wayback URLs for sensitive keywords
-    --param        Extract URLs with GET parameters
+    --sensitive     Scan Wayback URLs for sensitive keywords
+    --param         Extract URLs with GET parameters
+    --force         Skip overwrite prompt for existing result folders
 
   OUTPUT:
     - results/<domain>/subdomains.txt
@@ -34,24 +36,32 @@ def usage():
     """)
 
 def extract_domain(input_url):
-    try:
-        parsed = urllib.parse.urlparse(input_url)
-        if parsed.netloc:
-            return parsed.netloc
-        elif parsed.path:
-            return parsed.path
-        else:
-            raise ValueError
-    except Exception:
+    # Normalize
+    if "://" not in input_url:
+        input_url = "http://" + input_url
+
+    parsed = urllib.parse.urlparse(input_url)
+    domain = parsed.netloc.split(":")[0].strip()
+
+    if not re.match(r"^[a-zA-Z0-9.-]+$", domain):
         print(f"[!] Invalid domain or URL: {input_url}")
         sys.exit(1)
+
+    return domain
 
 def run_cmd(command, silent=False):
     try:
         if silent:
-            return subprocess.check_output(command, shell=True, stderr=subprocess.DEVNULL).decode().splitlines()
+            out = subprocess.check_output(
+                command,
+                shell=True,
+                stderr=subprocess.DEVNULL
+            )
         else:
-            return subprocess.check_output(command, shell=True).decode().splitlines()
+            out = subprocess.check_output(command, shell=True)
+
+        return out.decode().splitlines()
+
     except subprocess.CalledProcessError:
         return []
 
@@ -71,10 +81,10 @@ def draw_box(msg):
         width = wcswidth(msg)
     except ImportError:
         width = len(msg)
-    width += 2
-    print('+' + '-' * width + '+')
-    print(f'| {msg} |')
-    print('+' + '-' * width + '+')
+
+    print("+" + "-" * (width + 2) + "+")
+    print(f"| {msg} |")
+    print("+" + "-" * (width + 2) + "+")
 
 def find_subdomains(domain, outdir):
     print("[*] Finding subdomains...")
@@ -84,78 +94,78 @@ def find_subdomains(domain, outdir):
     subs.update([s for s in run_cmd(f"assetfinder --subs-only {domain}", silent=True) if domain in s])
 
     if not subs:
-        print("[-] No subdomains found. Exiting.")
+        print("[-] No subdomains found.")
         sys.exit(1)
 
     subs_file = outdir / "subdomains.txt"
-    subs_file.write_text('\n'.join(sorted(subs)))
+    subs_file.write_text("\n".join(sorted(subs)))
 
-    msg = f"✅  Found {len(subs)} subdomain{'s' if len(subs)!=1 else ''} for {domain}"
-    draw_box(msg)
-    return list(subs)
+    draw_box(f"✅  Found {len(subs)} subdomain{'s' if len(subs)!=1 else ''} for {domain}")
+    return sorted(subs)
+
+def get_wayback(sub):
+    return run_cmd(f"timeout 50s waybackurls https://{sub}", silent=True)
 
 def fetch_waybackurls(subdomains, outdir):
     print("[*] Fetching Wayback URLs...")
+
     all_urls = []
 
-    for i, sub in enumerate(subdomains, 1):
-        print(f"  \U0001F310 {sub} [{i}/{len(subdomains)}]")
-        try:
-            urls = run_cmd(f"timeout 50s waybackurls https://{sub}", silent=True)
-            all_urls.extend(urls)
-        except Exception:
-            continue
+    with ThreadPoolExecutor(max_workers=20) as pool:
+        for i, result in enumerate(pool.map(get_wayback, subdomains), 1):
+            print(f"  🌐 {subdomains[i-1]} [{i}/{len(subdomains)}]")
+            all_urls.extend(result)
 
-    # Deduplicate and write once
+    unique = sorted(set(all_urls))
     wayback_file = outdir / "waybackurls.txt"
-    unique_urls = sorted(set(all_urls))
-    wayback_file.write_text('\n'.join(unique_urls))
+    wayback_file.write_text("\n".join(unique))
+
     return wayback_file
 
 def scan_sensitive(wayback_file, outdir):
     keywords = [
-        "admin", "_next", "jwt", "login", "passwd", "password", "secret", "api", "key", "config",
-        "debug", "token", "backup", "dump", "db", "sql", "shell", "root", "ssh", "env", "vault",
-        "staging", "dev", "wp-admin", "wp-json", "cdn", "assets.", "wp-login.php",
-        "credentials", "auth", "oauth", "session", "cookie", "access", "csrf", "xss", "adminpanel",
-        "private", "secretkey", "apikey", "user", "users", "login.php", "register", "config.php",
-        "config.yaml", "config.json", "backup.sql", "dump.sql", "database", "databases",
-        "privatekey", "id_rsa", "id_dsa", "ssh_key", "token.json", "env.local", "env.production",
-        "dev.local", "test", "uat", "passwords", "pass", "hash", "hashes", "encrypted", "decrypt",
-        "api_token", "api_keys", "aws", "azure", "gcp", "s3", "credentials.json", "secret.json",
-        "secret.key", "web.config", "htpasswd", "htaccess", "robots.txt", "error.log", "logs",
-        "logs.txt", "debug.log", "config.bak", "backup.zip", "backup.tar", "dump.tar.gz"
+        "admin", "_next", "jwt", "login", "passwd", "password", "secret",
+        "api", "key", "config", "debug", "token", "backup", "dump", "db",
+        "sql", "shell", "env", "vault", "staging", "dev", "wp-admin",
+        "wp-json", "cdn", "credentials", "oauth", "cookie", "private",
+        "apikey", "register", "config.php", "backup.sql", "dump.sql",
+        "database", "privatekey", "id_rsa", "ssh", "token.json",
+        "credentials.json", "secret.json", "web.config", "error.log"
     ]
+
     hits = []
 
-    with open(wayback_file, 'r') as infile:
-        for line in infile:
-            line = line.strip()
-            if any(k in line.lower() for k in keywords):
-                hits.append(line)
+    with open(wayback_file, "r") as f:
+        for line in f:
+            url = line.strip().lower()
+            if any(k in url for k in keywords):
+                hits.append(line.strip())
 
-    sensitive_file = outdir / "sensitive.txt"
-    sensitive_file.write_text('\n'.join(sorted(set(hits))))
-    print(f"\n\U0001F50D Found {len(hits)} potentially sensitive URL{'s' if len(hits)!=1 else ''}.")
-    print(f" - Sensitive matches saved to: {sensitive_file}")
+    outfile = outdir / "sensitive.txt"
+    outfile.write_text("\n".join(sorted(set(hits))))
+
+    print(f"\n🔍 Found {len(hits)} potentially sensitive URLs.")
+    print(f" - Saved to: {outfile}")
 
 def extract_params(wayback_file, outdir):
     print("[*] Extracting URLs with parameters...")
-    hits = []
 
-    with open(wayback_file, 'r') as infile:
-        for line in infile:
-            line = line.strip()
-            if '?' in line and '=' in line:
-                hits.append(line)
+    results = []
 
-    param_file = outdir / "params.txt"
-    param_file.write_text('\n'.join(sorted(set(hits))))
-    print(f"\U0001F50D Found {len(hits)} URLs with parameters.")
-    print(f" - Parameterized URLs saved to: {param_file}")
+    with open(wayback_file, "r") as f:
+        for line in f:
+            url = line.strip()
+            if "?" in url and "=" in url:
+                results.append(url)
+
+    outfile = outdir / "params.txt"
+    outfile.write_text("\n".join(sorted(set(results))))
+
+    print(f"🔍 Found {len(results)} parameterized URLs.")
+    print(f" - Saved to: {outfile}")
 
 def main():
-    if len(sys.argv) < 2 or sys.argv[1] in ('-h', '--help'):
+    if len(sys.argv) < 2 or sys.argv[1] in ("-h", "--help"):
         usage()
         return
 
@@ -163,28 +173,31 @@ def main():
     domain = extract_domain(input_url)
     outdir = Path("results") / domain
 
-    # Check if folder exists and is not empty
-    if outdir.exists() and any(outdir.iterdir()):
-        answer = input(f"[!] The folder '{outdir}' already exists and is not empty. Are you sure you want to scan again? [y/N]: ").strip().lower()
-        if answer != 'y':
-            print("[*] Scan aborted by user.")
+    force = "--force" in sys.argv
+
+    # Safety check for existing folders
+    if outdir.exists() and any(outdir.iterdir()) and not force:
+        ans = input(f"[!] Folder '{outdir}' exists. Rescan? [y/N]: ").strip().lower()
+        if ans != "y":
+            print("[*] Scan aborted.")
             return
 
     outdir.mkdir(parents=True, exist_ok=True)
 
     print_banner()
+
     subdomains = find_subdomains(domain, outdir)
     wayback_file = fetch_waybackurls(subdomains, outdir)
-    print(f"\n[✓] Saved:\n - Subdomains: {outdir}/subdomains.txt\n - WaybackURLs: {wayback_file}")
 
-    # CLI flags
-    scan_sensitive_flag = '--sensitive' in sys.argv
-    extract_param_flag = '--param' in sys.argv
+    print(f"\n[✓] Saved:")
+    print(f" - Subdomains: {outdir}/subdomains.txt")
+    print(f" - Wayback URLs: {wayback_file}")
 
-    if scan_sensitive_flag:
+    if "--sensitive" in sys.argv:
         scan_sensitive(wayback_file, outdir)
-    if extract_param_flag:
+
+    if "--param" in sys.argv:
         extract_params(wayback_file, outdir)
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
