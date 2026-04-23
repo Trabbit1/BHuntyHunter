@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="images/bhunty_logo2.svg" alt="BHunty Logo" width="600"/>
+  <img src="images/logo_bhunty2-2.svg" alt="BHunty Logo" width="400"/>
 </p>
 
 ---
